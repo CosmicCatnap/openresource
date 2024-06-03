@@ -1,15 +1,79 @@
-# Description
-OpenResource is an open source resource manager designed to be performant and scalable
+# Axum Diesel Real-World Example
 
-OpenResource consists of an API in rust that processes transaction to a database
+[![GitHub stars](https://img.shields.io/github/stars/Quentin-Piot/axum-diesel-real-world.svg)](https://github.com/Quentin-Piot/axum-diesel-real-world/stargazers)
+[![GitHub license](https://img.shields.io/github/license/Quentin-Piot/axum-diesel-real-world.svg)](https://github.com/Quentin-Piot/axum-diesel-real-world/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/Quentin-Piot/axum-diesel-real-world.svg)](https://github.com/Quentin-Piot/axum-diesel-real-world/issues)
 
-# Architecture
+A modular Rust backend template based on the Domain-Driven Design (DDD) architecture, utilizing the Axum and Diesel
+frameworks. This repository serves as a starting point for building real-world applications in Rust, with different
+modules and frameworks to choose from.
 
-We use what we call a Microlyth which has a "core" binary handling the bulk of operations and secondary workers for scheduled tasks and scalable workloads. Our hope is that any number of cores and workers can be containerized or virtualized as desired without interferance.
+## Table of Contents
 
-OpenResource has a backend built in rust becuase it is a well established language for safe, performant, and reliable code which we hope will produce safe, performant, and reliable applications. It uses Axum because I trust the people who built Tokio. It also provides a batteries included build system with cargo and a strict compiler with verbose and well documented output reducing a number of common mistakes and frustrations found in other languages.
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Available Modules](#available-modules)
+- [Contributing](#contributing)
+- [License](#license)
 
-OpenResource has a frontend built in React because it is the industry standard for responsive web applications and Material UI because it is a popular choice for design elements.
+## Introduction
 
-# Licensing
-This project along with all software used in this project is on the MIT License
+This repository provides a boilerplate for developing Rust backend applications following the principles of
+Domain-Driven Design (DDD). It leverages the power of [Axum](https://github.com/tokio-rs/axum) for building asynchronous
+APIs and [Diesel](https://github.com/diesel-rs/diesel) for working with databases.
+
+## Features
+
+- Domain-Driven Design (DDD) architecture.
+- Integration with Axum for building asynchronous APIs.
+- Integration with Diesel for database operations.
+- Modular project structure for easy extension and maintainability.
+- Authentication modules with OAuth (optional).
+
+## Getting Started
+
+Follow these steps to get started with your Rust backend project based on this template:
+
+1. Clone this repository:
+
+   ```bash
+   git clone https://github.com/Quentin-Piot/axum-diesel-real-world.git
+      ```
+
+
+2. Choose a specific module/framework branch or work with the default configuration.
+
+3. Customize the project to your needs.
+
+4. uild and run your Rust backend:
+
+    ```bash
+    cargo run
+    ```
+
+## Project Structure
+
+The project follows a modular structure to keep your code organized and maintainable. Here's a brief overview of the
+project structure:
+
+- `src/`: Contains the main source code of your application.
+    - `domain/`: Define your domain logic using DDD principles.
+        - `models/`: Define your domain models.
+    - `handlers/`: Define your API handlers.
+    - `infra/`: Define your infrastructure logic.
+        - `db/`: Define your database logic.
+        - `repositories/`: Define your repositories.
+    - `utils/`: Define your utility functions.
+        - `custom_extractors/`: Define your custom extractors for Axum.
+    - `main.rs`: Application entry point.
+    - `routes.rs`: Define your API routes.
+    - `config.rs`: Define your application configuration : use OnceCell for static config file.
+    - `error.rs`: Define your custom global error types.
+
+- `migrations/`: Database migration files for Diesel (if applicable).
+
+### License
+
+This project is licensed under the MIT License.

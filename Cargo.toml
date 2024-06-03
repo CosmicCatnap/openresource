@@ -2,15 +2,19 @@
 name = "openresource"
 version = "0.1.0"
 edition = "2021"
-publish = false
+
 
 [dependencies]
 axum = { version = "0.7.5", features = ["macros"] }
-bb8 = "0.8"
-diesel = "2"
-diesel-async = { version = "0.3", features = ["postgres", "bb8"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1"
-tokio = { version = "1.0", features = ["full"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+axum-macros = "0.4.1"
+chrono = { version = "0.4.26", features = ["serde"] }
+deadpool-diesel = { version = "0.4", features = ["postgres"] }
+diesel = { version = "2.2.0", features = ["postgres", "uuid", "serde_json"] }
+diesel_migrations = "2.2.0"
+dotenvy = "0.15.7"
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = "1.0.117"
+tokio = { version = "1.38", features = ["sync", "macros", "rt-multi-thread"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+uuid = { version = "1.8", features = ["fast-rng", "v4", "serde"] }
