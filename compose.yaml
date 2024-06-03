@@ -1,42 +1,55 @@
+name: open-resource
 services:
-  server:
+  frontend:
+    build:
+      context: frontend
+      target: development
+    networks:
+      - client-side
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/code/src:ro
     environment:
-      - PORT=3123
+      - BACKEND_URL:localhost:8000
+    depends_on:
+      server:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: backend
+      target: development
+    networks:
+      - client-side
+      - server-side
+    ports:
+      - 3123:3123
+    environment:
+      - PORT=8000
       - DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/openresource
       - HOST=0.0.0.0
       - RUST_LOG=info
-    build:
-      context: .
-      target: final
+    depends_on:
+      db:
+        condition: service_healthy
+
+  database:
+    image: postgres:bookworm
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD="notagoodpassword"
+    networks:
+      - server-side
     ports:
-      - 3123:3123
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
 
-### POTENTIAL POSTGRES DEV SETUP
+networks:
+  client-side: {}
+  server-side: {}
 
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     image: postgres
-#     restart: always
-#     user: postgres
-#     secrets:
-#       - db-password
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=example
-#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-#     expose:
-#       - 5432
-#     healthcheck:
-#       test: [ "CMD", "pg_isready" ]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
-
+volumes:
+  backend-cache: {}
+  db-data: {}
