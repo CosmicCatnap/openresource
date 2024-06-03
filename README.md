@@ -1,78 +1,17 @@
-# Axum Diesel Real-World Example
+# OpenResource
 
-[![GitHub stars](https://img.shields.io/github/stars/Quentin-Piot/axum-diesel-real-world.svg)](https://github.com/Quentin-Piot/axum-diesel-real-world/stargazers)
-[![GitHub license](https://img.shields.io/github/license/Quentin-Piot/axum-diesel-real-world.svg)](https://github.com/Quentin-Piot/axum-diesel-real-world/blob/master/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/Quentin-Piot/axum-diesel-real-world.svg)](https://github.com/Quentin-Piot/axum-diesel-real-world/issues)
+## About
+OpenResource is an open source resource management tool
 
-A modular Rust backend template based on the Domain-Driven Design (DDD) architecture, utilizing the Axum and Diesel
-frameworks. This repository serves as a starting point for building real-world applications in Rust, with different
-modules and frameworks to choose from.
+## Goal
+Every company manages resources such as products, inventory, employees, clients, and schedules. OpenResource is designed to be a suitable replacement/alternative for more expensive enterprise solutions. Our hope is to provide a robust and reliable solution for small to medium buisnesses that can provide all the same utility as much larger expensive enterprise solutions.
 
-## Table of Contents
+## Architecture
+All parts of the system are modular for maintainability and scailability. 
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Available Modules](#available-modules)
-- [Contributing](#contributing)
-- [License](#license)
+### Frontend - Built in nextjs and uses tailwind css for a simple but intuitive interface to all features exposed by the OpenResource API. It is a working reference implementation for anybody wanting to use the product as a starting point to build a custom solution themselves or for anybody who needs a reliable but flexible data model that should fit the needs of most small to medium buisnesses.
 
-## Introduction
-
-This repository provides a boilerplate for developing Rust backend applications following the principles of
-Domain-Driven Design (DDD). It leverages the power of [Axum](https://github.com/tokio-rs/axum) for building asynchronous
-APIs and [Diesel](https://github.com/diesel-rs/diesel) for working with databases.
-
-## Features
-
-- Domain-Driven Design (DDD) architecture.
-- Integration with Axum for building asynchronous APIs.
-- Integration with Diesel for database operations.
-- Modular project structure for easy extension and maintainability.
-- Authentication modules with OAuth (optional).
-
-## Getting Started
-
-Follow these steps to get started with your Rust backend project based on this template:
-
-1. Clone this repository:
-
-   ```bash
-   git clone https://github.com/Quentin-Piot/axum-diesel-real-world.git
-      ```
-
-
-2. Choose a specific module/framework branch or work with the default configuration.
-
-3. Customize the project to your needs.
-
-4. uild and run your Rust backend:
-
-    ```bash
-    cargo run
-    ```
-
-## Project Structure
-
-The project follows a modular structure to keep your code organized and maintainable. Here's a brief overview of the
-project structure:
-
-- `src/`: Contains the main source code of your application.
-    - `domain/`: Define your domain logic using DDD principles.
-        - `models/`: Define your domain models.
-    - `handlers/`: Define your API handlers.
-    - `infra/`: Define your infrastructure logic.
-        - `db/`: Define your database logic.
-        - `repositories/`: Define your repositories.
-    - `utils/`: Define your utility functions.
-        - `custom_extractors/`: Define your custom extractors for Axum.
-    - `main.rs`: Application entry point.
-    - `routes.rs`: Define your API routes.
-    - `config.rs`: Define your application configuration : use OnceCell for static config file.
-    - `error.rs`: Define your custom global error types.
-
-- `migrations/`: Database migration files for Diesel (if applicable).
+### Backend - Rust is our choice for a backend API using Axom as our request handler and Diesel as our ORM for PostgreSQL. Rust is a powerful, performant, and reliable language with a strict compiler and rich type system that reduces errors while allowing expressive data processing.
 
 ### License
 
