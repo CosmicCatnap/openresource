@@ -1,4 +1,4 @@
-name: open-resource
+name: openresource
 services:
   frontend:
     build:
@@ -9,13 +9,12 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./frontend/src:/code/src:ro
+      - ./src:/code/src:ro
     environment:
-      - BACKEND_URL:localhost:8000
+      - BACKEND_URL=localhost:8000
     depends_on:
-      server:
+      backend:
         condition: service_healthy
-
   backend:
     build:
       context: backend
@@ -24,16 +23,15 @@ services:
       - client-side
       - server-side
     ports:
-      - 3123:3123
+      - 8000:8000
     environment:
       - PORT=8000
-      - DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/openresource
+      - DATABASE_URL=postgres://postgres:notagoodpassword@host.docker.internal:5432/openresource
       - HOST=0.0.0.0
       - RUST_LOG=info
     depends_on:
-      db:
+      database:
         condition: service_healthy
-
   database:
     image: postgres:bookworm
     restart: always
@@ -45,11 +43,9 @@ services:
       - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
-
 networks:
   client-side: {}
   server-side: {}
-
 volumes:
   backend-cache: {}
   db-data: {}

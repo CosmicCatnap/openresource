@@ -1,61 +1,36 @@
-# syntax=docker/dockerfile:1.4
-FROM rust:bookworm AS base
-
-ARG RUST_VERSION=1.78.0
-ARG APP_NAME=openresource
-FROM rust:${RUST_VERSION}-slim-bullseye AS build
-ARG APP_NAME
-
-ENV USER=root
+ARG RUST_VERSION=1.72.0
+ENV DATABASE_URL=postgres://openresource:thisisabadpassword@localhost:5432/openresource
+FROM rust:bookworm AS build
 WORKDIR /code
-RUN cargo init
-COPY Cargo.toml /code/Cargo.toml
-RUN cargo fetch
-COPY . /code
-
-FROM base AS development
-
-EXPOSE 8000
-
-CMD [ "cargo", "run", "--offline" ]
-
-FROM base AS dev-envs
-
-EXPOSE 8000
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends git
-EOF
-
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
-
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
-CMD [ "cargo", "run", "--offline" ]
-
-FROM base AS builder
-
-# Build the application.
-RUN --mount=type=bind,source=src,target=src \
-    --mount=type=bind,source=Cargo.toml,target=Cargo.toml \
-    --mount=type=bind,source=Cargo.lock,target=Cargo.lock \
-    --mount=type=bind,source=migrations,target=migrations \
-    --mount=type=cache,target=/app/target/ \
+COPY Cargo.toml . 
+COPY Cargo.lock . 
+RUN --mount=type=bind,source=src,target=src,z \
+    --mount=type=bind,source=migrations,target=migrations,z \
+    --mount=type=cache,target=/code/target/ \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
     <<EOF
 set -e
-ls -la
 cargo build --locked --release
-cp -r ./migrations /bin/migrations
-cp ./target/release/$APP_NAME /bin/server
+cp -r ./migrations /srv/migrations
+cp ./target/release/openresource /srv/server
 EOF
 
-EXPOSE 8000
+FROM rust:bookworm AS final
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid 10001 \
+    appuser
+USER appuser
 
-COPY --from=builder /code/target/release/openresource /bin/openresource
+# Copy the executable from the "build" stage.
+COPY --from=build /srv/server /srv/server
 
-CMD [ "/bin/openresource" ]
+# Expose the port that the codelication listens on.
+EXPOSE 3000
+
+# What the container should run when it is started.
+CMD ["/srv/server"]
