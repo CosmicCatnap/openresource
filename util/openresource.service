@@ -1,0 +1,23 @@
+# example systemd unit file for openresource api server
+# copy to /etc/systemd/system to create and enable
+[Unit]
+Description=openresource api server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=deploy
+WorkingDirectory=/srv/deploy
+
+ExecStart=/srv/deploy/server
+
+# Restart the server when it is stopped or crashed after 30 seconds
+# Comment out RestartSec if you want to restart immediately
+Restart=always
+RestartSec=30
+
+# Do not remove this!
+StandardInput=null
+
+[Install]
+WantedBy=multi-user.target
