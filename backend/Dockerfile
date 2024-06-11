@@ -1,9 +1,9 @@
 ARG RUST_VERSION=1.72.0
-ENV DATABASE_URL=postgres://openresource:thisisabadpassword@localhost:5432/openresource
 FROM rust:bookworm AS build
 WORKDIR /code
 COPY Cargo.toml . 
 COPY Cargo.lock . 
+COPY .env .
 RUN --mount=type=bind,source=src,target=src,z \
     --mount=type=bind,source=migrations,target=migrations,z \
     --mount=type=cache,target=/code/target/ \

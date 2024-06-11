@@ -1,3 +1,4 @@
+MAKEFLAGS=-j 2
 prog :=openresource
 
 debug ?=
@@ -14,30 +15,33 @@ else
   extension :=
 endif
 
-build-api:
+build-backend:
 	cd backend && cargo build $(release)
 
-install-api:
+build-frontend:
+	cd frontend && npm install && npm run build
+
+build: build-backend build-frontend
+
+dev-frontend:
+	cd frontend && npm run dev
+
+dev-backend:
+	cd backend && cargo run
+
+dev: dev-backend dev-frontend
+
+install-backend: build-backend
 	systemctl stop openresource
 	cp backend/target/$(target)/$(prog) ~/server
 	systemctl start openresource
 
-build-web:
-	cd frontend && npm install
-
-install-web:
+install-frontend: build-frontend
 	cp -r frontend/out/* ~/public
 
-run-dev:
-	~/server && cd frontend && npm run dev
+install: install-backend install-frontend
 
-run-web:
-	cd frontend && npm run dev
-
-run-api:
-	~/server
-
-all: build install
+all: build
 
 help:
 	@echo "usage: make $(prog) [debug=1]"

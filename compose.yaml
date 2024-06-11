@@ -9,9 +9,9 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./src:/code/src:ro
-    environment:
-      - BACKEND_URL=localhost:8000
+      - ./backend:/code/src:ro
+    env_file:
+      - ./frontend/.env
     depends_on:
       backend:
         condition: service_healthy
@@ -24,19 +24,16 @@ services:
       - server-side
     ports:
       - 8000:8000
-    environment:
-      - PORT=8000
-      - DATABASE_URL=postgres://postgres:notagoodpassword@host.docker.internal:5432/openresource
-      - HOST=0.0.0.0
-      - RUST_LOG=info
+    env_file:
+      - ./backend/.env
     depends_on:
       database:
         condition: service_healthy
   database:
     image: postgres:bookworm
     restart: always
-    environment:
-      - POSTGRES_PASSWORD="notagoodpassword"
+    env_file:
+      - ./backend/.env
     networks:
       - server-side
     ports:

@@ -14,3 +14,7 @@
 * Finish dockerizing 
 * Create github runner script
 * Setup deployment user and nginx on prod box
+
+##LOG
+
+* copied https://github.com/vercel/nextjs-postgres-nextauth-tailwindcss-template to frontend as a good starting point for a dashboard but need to uncouple its login mechanism from sso
