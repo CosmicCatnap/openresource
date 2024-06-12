@@ -1,24 +1,35 @@
 name: openresource
 services:
-  frontend:
-    build:
-      context: frontend
-      target: development
-    networks:
-      - client-side
-    ports:
-      - 3000:3000
-    volumes:
-      - ./backend:/code/src:ro
+#  frontend:
+#    build:
+#      context: frontend
+#      target: development
+#    networks:
+#      - client-side
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - ./frontend:/code/src:ro
+#    env_file:
+#      - ./frontend/.env
+#    depends_on:
+#      backend:
+#        condition: service_healthy
+  database:
+    image: postgres:bookworm
+    restart: always
     env_file:
-      - ./frontend/.env
-    depends_on:
-      backend:
-        condition: service_healthy
+      - ./database/.env
+    networks:
+      - server-side
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
   backend:
     build:
       context: backend
-      target: development
+      target: final
     networks:
       - client-side
       - server-side
@@ -29,17 +40,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-  database:
-    image: postgres:bookworm
-    restart: always
-    env_file:
-      - ./backend/.env
-    networks:
-      - server-side
-    ports:
-      - 5432:5432
-    volumes:
-      - db-data:/var/lib/postgresql/data
 networks:
   client-side: {}
   server-side: {}
