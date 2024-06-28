@@ -1,6 +1,5 @@
 name: openresource
 services:
-<<<<<<< HEAD
   frontend:
     build:
       context: frontend
@@ -45,34 +44,11 @@ services:
       - POSTGRES_USER=openresource
       - POSTGRES_PASSWORD=openresource
       - POSTGRES_DB=openresource
-=======
-#  frontend:
-#    build:
-#      context: frontend
-#      target: development
-#    networks:
-#      - client-side
-#    ports:
-#      - 3000:3000
-#    volumes:
-#      - ./frontend:/code/src:ro
-#    env_file:
-#      - ./frontend/.env
-#    depends_on:
-#      backend:
-#        condition: service_healthy
-  database:
-    image: postgres:bookworm
-    restart: always
-    env_file:
-      - ./database/.env
->>>>>>> a9915badc85e4ec7385ae81e64e33b5c9deb26cc
     networks:
       - backend
     ports:
       - 5432:5432
     volumes:
-<<<<<<< HEAD
       - database:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
@@ -84,26 +60,6 @@ networks:
   frontend: {}
   backend: {}
 
-=======
-      - db-data:/var/lib/postgresql/data
-  backend:
-    build:
-      context: backend
-      target: final
-    networks:
-      - client-side
-      - server-side
-    ports:
-      - 8000:8000
-    env_file:
-      - ./backend/.env
-    depends_on:
-      database:
-        condition: service_healthy
-networks:
-  client-side: {}
-  server-side: {}
->>>>>>> a9915badc85e4ec7385ae81e64e33b5c9deb26cc
 volumes:
   backend-cache: {}
   database: {}
