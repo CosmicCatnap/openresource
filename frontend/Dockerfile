@@ -1,4 +1,4 @@
-FROM node:bookworm AS development
+FROM node:bookworm AS base
 
 FROM base AS deps
 WORKDIR /code
@@ -14,8 +14,8 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+WORKDIR /code
+COPY --from=deps /code/node_modules ./node_modules
 COPY . .
 
 # Don't track me
@@ -30,7 +30,7 @@ RUN \
 
 # Production image, copy all the files and run next
 FROM base AS runner
-WORKDIR /app
+WORKDIR /code
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
@@ -39,7 +39,7 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+COPY --from=builder /code/public ./public
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
@@ -52,10 +52,4 @@ COPY --from=builder --chown=nextjs:nodejs /code/.next/static ./.next/static
 
 USER nextjs
 
-EXPOSE 3000
-
-ENV PORT 3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
 CMD HOSTNAME="0.0.0.0" node server.js
