@@ -29,7 +29,7 @@ services:
       - 8000:8000
     environment:
       - PORT=8000
-      - DATABASE_URL=postgres://openresource:openresource@host.docker.internal:5432/openresource
+      - DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/openresource
       - HOST=0.0.0.0
       - RUST_LOG=info
     command: /srv/openresource
@@ -41,9 +41,9 @@ services:
     image: postgres:bookworm
     restart: always
     environment:
-      - POSTGRES_USER=openresource
-      - POSTGRES_PASSWORD=openresource
       - POSTGRES_DB=openresource
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     networks:
       - backend
     ports:
