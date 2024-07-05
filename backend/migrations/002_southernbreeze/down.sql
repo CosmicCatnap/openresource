@@ -1,0 +1,14 @@
+DROP TABLE openresource;
+DROP TABLE customer;
+DROP TABLE contact;
+DROP TABLE product;
+DROP TABLE inventory;
+DROP TABLE location;
+DROP TABLE transaction;
+DROP TABLE transaction_log;
+DROP TABLE organization;
+DROP TABLE employee;
+DROP TABLE buisness_unit;
+DROP TABLE payrole;
+DROP TABLE order;
+DROP TABLE shipment;

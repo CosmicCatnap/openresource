@@ -1,14 +1,3 @@
-
-/* metadata for openresource */
-CREATE TABLE openresource (
-    id serial PRIMARY KEY,
-    name varchar(60),
-    type varchar(60),
-    version varchar(20),
-    backend_url varchar(120),
-    frontend_url varchar(120),
-    status varchar(20),
-);
 /* Sales */
 CREATE TABLE customer ( 
     id serial PRIMARY KEY,
@@ -40,6 +29,7 @@ CREATE TABLE product (
     id serial PRIMARY KEY,
     uid uuid DEFAULT uuid_generate_v4(),
     name varchar(60),
+    type varchar(30),
     catagory varchar(30),
     description text,
     metadata json
@@ -67,13 +57,6 @@ CREATE TABLE transaction (
     product_id int references product(id),
     price decimal(15,2)
 );
-
-CREATE TABLE transaction_log (
-    id serial PRIMARY KEY,
-    uid uuid DEFAULT uuid_generate_v4(),
-    transaction_id int references transaction(id)
-);
-
 /*
 Buisness Structure
 */
