@@ -41,7 +41,7 @@ CREATE TABLE user_role (
 );
 
 -- Create the logs table
-CREATE TABLE log (
+CREATE TABLE authorization_log (
     id SERIAL PRIMARY KEY,
     user_id INTEGER,
     event_type VARCHAR(255) NOT NULL,
