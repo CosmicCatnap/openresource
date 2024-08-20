@@ -1,65 +1,49 @@
 name: openresource
 services:
-  frontend:
-    build:
-      context: frontend
-      target: builder
-    networks:
-      - frontend
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend/src:/code/src:ro
-    environment:
-      - BACKEND_URL:localhost:8000
-      - HOSTNAME="0.0.0.0"
-    command: node /code/src/server.js
-    depends_on:
-      backend:
-        condition: service_healthy
+#  frontend:
+#    build:
+#      context: frontend
+#      target: builder
+#    networks:
+#      - frontend
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - ./frontend/src:/code/src:ro
+#    environment:
+#      - BACKEND_URL:localhost:8000
+#      - HOSTNAME="0.0.0.0"
+#    command: node /code/src/server.js
+#    depends_on:
+#      backend:
+#        condition: service_healthy
 
   backend:
-    build:
-      context: backend
-      target: builder
-    networks:
-      - frontend
-      - backend
-    ports:
-      - 8000:8000
+    build: backend
+    command: cargo run
+    volumes:
+      - backend-cache:/root/.cargo
     environment:
       - PORT=8000
-      - DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/openresource
+      - DATABASE_URL=postgres://openresource:openresource@database:5432/openresource
       - HOST=0.0.0.0
       - RUST_LOG=info
-    command: /srv/openresource
     depends_on:
-      database:
-        condition: service_healthy
+      - database
+    ports:
+      - 8000:8000
 
   database:
     image: postgres:bookworm
-    restart: always
     environment:
       - POSTGRES_DB=openresource
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    networks:
-      - backend
+      - POSTGRES_USER=openresource
+      - POSTGRES_PASSWORD=openresource
+    volumes:
+      - db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    volumes:
-      - database:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
-
-networks:
-  frontend: {}
-  backend: {}
 
 volumes:
   backend-cache: {}
-  database: {}
+  db-data: {}
