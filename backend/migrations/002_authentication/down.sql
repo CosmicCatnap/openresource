@@ -1,6 +1,6 @@
-DROP TABLE user;
-DROP TABLE session;
-DROP TABLE token;
-DROP TABLE role;
-DROP TABLE user_role;
-DROP TABLE authorization_log;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS session;
+DROP TABLE IF EXISTS token;
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS user_role;
+DROP TABLE IF EXISTS authorization_log;

@@ -15,4 +15,4 @@ All parts of the system are modular for maintainability and scailability.
 
 ### License
 
-This project is licensed under the MIT License.
+This project is under the MIT License.

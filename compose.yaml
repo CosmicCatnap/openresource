@@ -1,49 +1,56 @@
 name: openresource
-services:
-#  frontend:
-#    build:
-#      context: frontend
-#      target: builder
-#    networks:
-#      - frontend
-#    ports:
-#      - 3000:3000
-#    volumes:
-#      - ./frontend/src:/code/src:ro
-#    environment:
-#      - BACKEND_URL:localhost:8000
-#      - HOSTNAME="0.0.0.0"
-#    command: node /code/src/server.js
-#    depends_on:
-#      backend:
-#        condition: service_healthy
-
-  backend:
-    build: backend
-    command: cargo run
-    volumes:
-      - backend-cache:/root/.cargo
-    environment:
-      - PORT=8000
-      - DATABASE_URL=postgres://openresource:openresource@database:5432/openresource
-      - HOST=0.0.0.0
-      - RUST_LOG=info
-    depends_on:
-      - database
-    ports:
-      - 8000:8000
-
-  database:
-    image: postgres:bookworm
-    environment:
-      - POSTGRES_DB=openresource
-      - POSTGRES_USER=openresource
-      - POSTGRES_PASSWORD=openresource
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-
 volumes:
   backend-cache: {}
   db-data: {}
+services:
+  #  frontend:
+  #    build:
+  #      context: frontend
+  #      target: builder
+  #    networks:
+  #      - frontend
+  #    ports:
+  #      - 3000:3000
+  #    volumes:
+  #      - ./frontend/src:/code/src:ro
+  #    environment:
+  #      - backend_URL:localhost:8000
+  #      - HOSTNAME="0.0.0.0"
+  #    command: node /code/src/backend.js
+  #    depends_on:
+  #      backend:
+  #        condition: service_healthy
+
+  database:
+    build:
+      context: backend/database
+      target: final
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: backend
+      target: final
+    environment:
+      - PORT=8000
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
+      - HOST=0.0.0.0
+      - RUST_LOG=info
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - 8000:8000

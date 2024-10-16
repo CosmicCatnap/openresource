@@ -1,18 +1,15 @@
-CREATE TABLE user (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    uid uuid DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash BYTEA NOT NULL,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    password_hash BYTEA,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    metadata JSONB
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE session (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    session_token UUID NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -28,13 +25,13 @@ CREATE TABLE token (
 );
 
 -- Create the roles table
-CREATE TABLE role (
+CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
--- Create the user_roles table (many-to-many)
-CREATE TABLE user_role (
+-- Create the users_roles table (many-to-many)
+CREATE TABLE users_roles (
     user_id INTEGER NOT NULL REFERENCES users(id),
     role_id INTEGER NOT NULL REFERENCES roles(id),
     PRIMARY KEY (user_id, role_id)
@@ -43,8 +40,7 @@ CREATE TABLE user_role (
 -- Create the logs table
 CREATE TABLE authorization_log (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER,
+    user_id INTEGER NOT NULL REFERENCES users(id),
     event_type VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    data JSONB
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW()
 );
