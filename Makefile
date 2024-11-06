@@ -41,6 +41,8 @@ install-frontend: build-frontend
 
 install: install-backend install-frontend
 
+generate-api: npx @openapitools/openapi-generator-cli generate -i .\openapi.yaml -g rust-axum -o ./api
+
 all: build
 
 help:
